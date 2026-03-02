@@ -1,0 +1,102 @@
+<head>
+    <title>Display Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #result {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .product-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            width: 250px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            background-color: #f9f9f9;
+        }
+
+        .product-card:hover {
+            padding: 17px;
+            background-color: greenyellow;
+        }
+        .product-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .product-card p {
+            margin: 5px 0;
+        }
+        .categories {
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <h1>Our Products</h1>
+    <button id="loadProducts" onclick="resetList()">Load Products</button>
+    <select id = "categorySelect"> 
+        <option value="">Select a Category</option>
+    </select>
+    <button id="filter" onclick="filterList()">Filter Products</button>
+    <div id="result">
+    </div>
+    <script>
+        let allProducts = [];  // store products JSON
+
+        // Load JSON on page load to populate categories
+        $(document).ready(function() {
+            $.get("http://localhost:8000/products.json", function(data) {
+                allProducts = data["products"];
+                currProducts = allProducts;
+
+                // Extract unique categories
+                let categoriesSet = new Set();
+                allProducts.forEach(product => {
+                    product.categories.forEach(cat => categoriesSet.add(cat));
+                });
+
+                // Add categories to the <select>
+                categoriesSet.forEach(cat => {
+                    $("#categorySelect").append(`<option value="${cat}">${cat}</option>`);
+                });
+            })
+        });
+        function resetList() {
+            currProducts = allProducts;
+            loadList();
+        }
+        function filterList() {
+            let selectedCategory = $("#categorySelect").val();
+            if (!selectedCategory) {
+                alert("Please select a category.");
+                return;
+            }
+            currProducts = allProducts.filter(n => n.categories.includes(selectedCategory));
+            loadFilter();
+        }
+        function loadFilter() {
+            let str = "";
+            currProducts.forEach(function(product) {
+            str += "<div class='product-card'><h3>" + product.name + "</h3>" + "</div>";
+            })
+            document.getElementById("result").innerHTML = str;
+        }
+        function loadList() {
+            let str = "";
+            currProducts.forEach(function(product) {
+            str += "<div class='product-card'><h3>" + product.name + "</h3><p>" + 
+                    product.description + "</p>" + 
+                    "<p>Price: $" + product.price + 
+                    "</p><p>Categories: " + product.categories.join(", ") + "</p></div>";
+            })
+            document.getElementById("result").innerHTML = str;
+        }
+    </script>
+</body>

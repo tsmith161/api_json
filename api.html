@@ -1,0 +1,122 @@
+<head>
+    <title>US Public Holidays 2026</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #holidayList {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .holiday-card {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        .holiday-name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .holiday-date {
+            color: #555;
+        }
+
+        .content-box {
+            margin-top: 10px;
+            height: 350px;
+            background-color: whitesmoke;
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        .content-box h1 {
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>US Public Holidays 2026</h1>
+    <button id="loadHolidaysBtn">Load Holidays</button>
+
+    <div id="holidayList"></div>
+
+    <script>
+        document.getElementById("loadHolidaysBtn").addEventListener("click", function() {
+            const url = "https://date.nager.at/api/v3/PublicHolidays/2026/US";
+
+            fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not OK");
+                return response.json();
+            })
+            .then(data => {
+                const listDiv = document.getElementById("holidayList");
+                listDiv.innerHTML = "";
+
+                data.forEach(holiday => {
+                    const card = document.createElement("div");
+                    card.className = "holiday-card";
+
+                    let str = "<div class='holiday-name'>" + 
+                        holiday.localName + 
+                        " (" + holiday.name + ")</div>" + 
+                        "<div class='holiday-date'>Date:" + 
+                        holiday.date + "</div>";
+                          
+
+                    card.innerHTML = str;
+
+                    listDiv.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching holidays:", error);
+                alert("Could not load public holidays. Check your internet connection.");
+            });
+        });
+    </script>
+
+    <div class="content-box">
+        <h1>
+            Description
+        </h1>
+        <p>
+            This is an API storing the information about public holidays. 
+            It has it's name and date as some useful info.
+        </p>
+        <h1>
+            Why?
+        </h1>
+        <p>
+            I selected the Public Holidays API. I felt that of the free APIs, it had some
+            of the most useful information. 
+        </p>
+        <h1>
+            Website
+        </h1>
+        <p>
+            <a href="https://date.nager.at/API">date.nager.at</a>
+        </p>
+        <h1>
+            Parameters provided
+        </h1>
+        <p>
+            I had to provide year and country as different countries have different holidays
+            and some holidays are fixed to a time of year and not a date.
+        </p>
+        <h1>
+            Where would this be helpful?
+        </h1>
+        <p>
+            This would be helpful to build a calendar web app with.
+        </p>
+    </div>
+</body>
