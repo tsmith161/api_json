@@ -48,21 +48,18 @@
     <div id="result">
     </div>
     <script>
-        let allProducts = [];  // store products JSON
+        let allProducts = []; 
 
-        // Load JSON on page load to populate categories
         $(document).ready(function() {
             $.get("https://github.com/tsmith161/api_json/blob/main/products.json", function(data) {
                 allProducts = data["products"];
                 currProducts = allProducts;
 
-                // Extract unique categories
                 let categoriesSet = new Set();
                 allProducts.forEach(product => {
                     product.categories.forEach(cat => categoriesSet.add(cat));
                 });
 
-                // Add categories to the <select>
                 categoriesSet.forEach(cat => {
                     $("#categorySelect").append(`<option value="${cat}">${cat}</option>`);
                 });
