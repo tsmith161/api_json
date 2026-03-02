@@ -52,7 +52,7 @@
 
         // Load JSON on page load to populate categories
         $(document).ready(function() {
-            $.get("http://localhost:8000/products.json", function(data) {
+            $.get("https://github.com/tsmith161/api_json/blob/main/products.json", function(data) {
                 allProducts = data["products"];
                 currProducts = allProducts;
 
